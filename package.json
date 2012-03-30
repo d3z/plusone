@@ -3,6 +3,7 @@
     "version" : "0.0.1",
     "dependencies" : {
         "oauth" : "0.9.6",
-        "express" : "2.5.4"
+        "express" : "2.5.4",
+        "ntwitter" : "0.3.0"
     }
 }
