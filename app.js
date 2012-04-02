@@ -22,7 +22,7 @@ var save_stat = function(user, stat) {
     redis.hincrby(user, stat, 1);
 };
 var user_re = /@.*?\s/g;
-var process = function(text) {
+var process_tweet = function(text) {
     var users = text.match(user_re);
     var stat = text.replace(user_re, '');
     for (var i in users) {
@@ -38,7 +38,7 @@ var open_stream = function() {
     twit.stream('user', {track : 'giveastat'}, function(stream) {
         stream.on('data', function(data) {
             if (typeof(data.text) != 'undefined') {
-                process.nextTick(function(){process(data.text);});
+                process.nextTick(function(){process_tweet(data.text);});
             }
         });
         stream.on('end', function(response) {
