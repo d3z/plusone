@@ -5,11 +5,21 @@ var twit = new twitter({
     access_token_key : "262621680-wGGzI0R5kQDplB90kWAnguZj9L6koZr2KoS0iQyI",
     access_token_secret : "ZcV2BebwhG7my4E2zIJIbrohgp8U5ncu0CeIOKzg"
 });
-var redis = require('redis');
+var get_redis_client = function() {
+    var redis = require('redis');
+    if (process.env.REDISTOGO_URL) {
+        var rtg = require('url').parse(process.env.REDISTOGO_URL);
+        var client = redis.createClient(rtg.port, rtg.hostname);
+        client.auth(rtg.auth.split(':')[1]);
+        return client;
+    }
+    else {
+        return redis.createClient();
+    }
+};
+var redis = get_redis_client();
 var save_stat = function(user, stat) {
-    client = redis.createClient();
-    client.hincrby(user, stat, 1);
-    client.end();
+    redis.hincrby(user, stat, 1);
 };
 var user_re = /@.*?\s/g;
 var process = function(text) {
